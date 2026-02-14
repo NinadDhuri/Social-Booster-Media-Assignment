@@ -4,23 +4,30 @@ This guide provides options to deploy the Expense Tracker application.
 
 ## Option 1: Full Stack on Render.com (Recommended for Simplicity)
 
-### Step 1: Deploy Backend (FastAPI)
+### Step 1: Create a PostgreSQL Database
 1.  Log in to [Render.com](https://render.com).
-2.  Click **New +** and select **Web Service**.
-3.  Connect your GitHub repository.
-4.  **Name:** `expense-tracker-backend` (or similar).
-5.  **Root Directory:** `backend`
-6.  **Runtime:** Python 3
-7.  **Build Command:** `pip install -r requirements.txt`
-8.  **Start Command:** `uvicorn main:app --host 0.0.0.0 --port $PORT`
-9.  **Environment Variables:** (Optional for persistent DB)
-    *   Key: `PYTHON_VERSION` Value: `3.10.0`
-    *   Key: `SQLALCHEMY_DATABASE_URL` Value: (Add your Postgres URL here if you have one)
-10. Click **Create Web Service**.
-11. **Wait** for the deployment to finish.
-12. **Copy the Backend URL** (e.g., `https://expense-backend.onrender.com`).
+2.  Click **New +** and select **PostgreSQL**.
+3.  Name it `expense-tracker-db`.
+4.  Choose the **Free Tier** (if available) or the lowest plan.
+5.  Click **Create Database**.
+6.  Once created, scroll down to **Connections** and copy the **Internal Database URL** (e.g., `postgres://user:password@hostname:port/db_name`).
 
-### Step 2: Deploy Frontend (React)
+### Step 2: Deploy Backend (FastAPI)
+1.  Click **New +** and select **Web Service**.
+2.  Connect your GitHub repository.
+3.  **Name:** `expense-tracker-backend`.
+4.  **Root Directory:** `backend`
+5.  **Runtime:** Python 3
+6.  **Build Command:** `pip install -r requirements.txt`
+7.  **Start Command:** `uvicorn main:app --host 0.0.0.0 --port $PORT`
+8.  **Environment Variables:**
+    *   Key: `PYTHON_VERSION` Value: `3.10.0`
+    *   Key: `SQLALCHEMY_DATABASE_URL` Value: Paste the **Internal Database URL** from Step 1.
+9.  Click **Create Web Service**.
+10. **Wait** for the deployment to finish.
+11. **Copy the Backend URL** (e.g., `https://expense-backend.onrender.com`).
+
+### Step 3: Deploy Frontend (React)
 1.  Go back to the Render Dashboard.
 2.  Click **New +** and select **Static Site**.
 3.  Connect the **same** GitHub repository.
@@ -30,7 +37,7 @@ This guide provides options to deploy the Expense Tracker application.
 7.  **Publish Directory:** `dist`
 8.  **Environment Variables:**
     *   Key: `VITE_API_URL`
-    *   Value: Paste your **Backend URL** from Step 1 (no trailing slash).
+    *   Value: Paste your **Backend URL** from Step 2 (no trailing slash).
 9.  Click **Create Static Site**.
 10. **Wait** for the deployment to finish.
 11. **Open your Frontend URL** – your app is now live!
@@ -39,18 +46,25 @@ This guide provides options to deploy the Expense Tracker application.
 
 ## Option 2: Frontend on Vercel & Backend on Railway
 
-### Step 1: Deploy Backend (Railway)
+### Step 1: Create a PostgreSQL Database (Railway)
 1.  Log in to [Railway.app](https://railway.app/).
-2.  Click **New Project** -> **Deploy from GitHub repo**.
-3.  Select your repository.
-4.  Railway will auto-detect the Python app. Go to **Settings** -> **Root Directory** and set it to `backend`.
-5.  Go to **Variables** and add:
-    *   `PORT`: `8000` (or leave default and update start command)
-    *   `SQLALCHEMY_DATABASE_URL`: Add a PostgreSQL database service in Railway and link it here.
-6.  Update **Start Command** in Settings: `uvicorn main:app --host 0.0.0.0 --port $PORT`
-7.  Railway will deploy your app. Copy the **Public Domain** URL.
+2.  Click **New Project** -> **Database** -> **PostgreSQL**.
+3.  Railway will spin up a new PostgreSQL instance.
+4.  Click on the PostgreSQL card -> **Connect** tab.
+5.  Copy the **Postgres Connection URL** (e.g., `postgresql://...`).
 
-### Step 2: Deploy Frontend (Vercel)
+### Step 2: Deploy Backend (Railway)
+1.  In the same Railway project, click **New +** -> **GitHub Repo**.
+2.  Select your repository.
+3.  Railway will auto-detect the Python app. Go to **Settings** -> **Root Directory** and set it to `backend`.
+4.  Go to **Variables** and add:
+    *   `PORT`: `8000` (or leave default and update start command)
+    *   `SQLALCHEMY_DATABASE_URL`: Paste the **Postgres Connection URL** from Step 1.
+5.  Update **Start Command** in Settings: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+6.  Railway will deploy your app. Go to **Settings** -> **Domains** -> **Generate Domain**.
+7.  Copy the **Public Domain** URL.
+
+### Step 3: Deploy Frontend (Vercel)
 1.  Log in to [Vercel.com](https://vercel.com).
 2.  Click **Add New...** -> **Project**.
 3.  Import your GitHub repository.
