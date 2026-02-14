@@ -48,6 +48,15 @@ A full-stack web application for tracking personal expenses with a dashboard and
     The API will be available at `http://localhost:8000`.
     API Documentation: `http://localhost:8000/docs`.
 
+### Running Tests
+
+To run the backend tests:
+
+```bash
+cd backend
+python -m pytest test_main.py
+```
+
 ### 2. Frontend Setup
 
 1.  Open a new terminal and navigate to the `frontend` directory:

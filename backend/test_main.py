@@ -1,8 +1,8 @@
 from fastapi.testclient import TestClient
-from .main import app, get_db
+from main import app, get_db
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from .database import Base
+from database import Base
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 

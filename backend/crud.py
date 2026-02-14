@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from . import models, schemas
+import models, schemas
 
 def get_expense(db: Session, expense_id: int):
     return db.query(models.Expense).filter(models.Expense.id == expense_id).first()
