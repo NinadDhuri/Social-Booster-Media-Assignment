@@ -1,12 +1,10 @@
-# Deployment Guide (Render.com)
+# Deployment Guide
 
-This guide provides step-by-step instructions to deploy the Expense Tracker application for free using **Render.com**.
+This guide provides options to deploy the Expense Tracker application.
 
-## Prerequisites
-1.  Push your code to a **GitHub repository**.
+## Option 1: Full Stack on Render.com (Recommended for Simplicity)
 
-## Step 1: Deploy Backend (FastAPI)
-
+### Step 1: Deploy Backend (FastAPI)
 1.  Log in to [Render.com](https://render.com).
 2.  Click **New +** and select **Web Service**.
 3.  Connect your GitHub repository.
@@ -22,8 +20,7 @@ This guide provides step-by-step instructions to deploy the Expense Tracker appl
 11. **Wait** for the deployment to finish.
 12. **Copy the Backend URL** (e.g., `https://expense-backend.onrender.com`).
 
-## Step 2: Deploy Frontend (React)
-
+### Step 2: Deploy Frontend (React)
 1.  Go back to the Render Dashboard.
 2.  Click **New +** and select **Static Site**.
 3.  Connect the **same** GitHub repository.
@@ -38,7 +35,43 @@ This guide provides step-by-step instructions to deploy the Expense Tracker appl
 10. **Wait** for the deployment to finish.
 11. **Open your Frontend URL** – your app is now live!
 
-## Troubleshooting
+---
 
-*   **CORS Issues:** The backend is configured to allow all origins (`*`) for this demo, so it should work immediately.
-*   **Database:** By default, this setup uses SQLite, which will reset if the backend restarts (ephemeral storage). For a production-ready DB, create a **PostgreSQL** instance on Render and add the `SQLALCHEMY_DATABASE_URL` environment variable to your Backend service.
+## Option 2: Frontend on Vercel & Backend on Railway
+
+### Step 1: Deploy Backend (Railway)
+1.  Log in to [Railway.app](https://railway.app/).
+2.  Click **New Project** -> **Deploy from GitHub repo**.
+3.  Select your repository.
+4.  Railway will auto-detect the Python app. Go to **Settings** -> **Root Directory** and set it to `backend`.
+5.  Go to **Variables** and add:
+    *   `PORT`: `8000` (or leave default and update start command)
+    *   `SQLALCHEMY_DATABASE_URL`: Add a PostgreSQL database service in Railway and link it here.
+6.  Update **Start Command** in Settings: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+7.  Railway will deploy your app. Copy the **Public Domain** URL.
+
+### Step 2: Deploy Frontend (Vercel)
+1.  Log in to [Vercel.com](https://vercel.com).
+2.  Click **Add New...** -> **Project**.
+3.  Import your GitHub repository.
+4.  **Framework Preset:** Vite
+5.  **Root Directory:** Click "Edit" and select `frontend`.
+6.  **Environment Variables:**
+    *   Key: `VITE_API_URL`
+    *   Value: Paste your **Railway Backend URL** (no trailing slash).
+7.  Click **Deploy**.
+
+---
+
+## Option 3: Frontend on Netlify
+
+1.  Log in to [Netlify.com](https://www.netlify.com/).
+2.  Click **Add new site** -> **Import from existing project**.
+3.  Connect to GitHub and pick your repo.
+4.  **Base directory:** `frontend`
+5.  **Build command:** `npm run build`
+6.  **Publish directory:** `dist`
+7.  Click **Show advanced** -> **New Variable**:
+    *   Key: `VITE_API_URL`
+    *   Value: Your backend URL.
+8.  Click **Deploy site**.
